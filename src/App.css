@@ -1,38 +1,86 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.App{
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
 }
 
-.App-link {
-  color: #61dafb;
+.piece-box{
+  width: 100px;
+  height: 100px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: .5s;
+}
+.piece-box.pick{
+  animation: upDown 1.5s infinite ease-out;
+}
+.piece-box.road{
+  opacity: 0.6;
+  background-color: violet;
+}
+@keyframes upDown {
+  0%{
+    top: 0px;
+  }
+  50%{
+    top: -20px;
+  }
+  100%{
+    top: 0px;
+  }
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.piece-box .Pawn{
+  position: absolute;
+  height: 160px;
+  top: -45px;
+  left: -35px;
+}
+.piece-box .Rook{
+  position: absolute;
+  height: 160px;
+  top: -45px;
+  left: -112px;
+}
+.piece-box .Knight{
+  position: absolute;
+  height: 160px;
+  top: -30px;
+  left: -205px;
+}
+.piece-box .Bishop{
+  position: absolute;
+  height: 160px;
+  top: -30px;
+  left: -285px;
+}
+.piece-box .Queen{
+  position: absolute;
+  height: 150px;
+  top: -23px;
+  left: -348px;
+}
+.piece-box .King{
+  position: absolute;
+  height: 150px;
+  top: -20px;
+  left: -430px;
+}
+
+.blackBoard{
+  background-color: black;
+}
+.whiteBoard{
+  background-color: white;
+}
+
+.white{
+  fill: white;
+}
+.black{
+  filter: brightness(0);
 }
