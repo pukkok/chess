@@ -14,6 +14,7 @@
   overflow: hidden;
   cursor: pointer;
   transition: .5s;
+  top: 0;
 }
 .piece-box.pick{
   animation: upDown 1.5s infinite ease-out;
