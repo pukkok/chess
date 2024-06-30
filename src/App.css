@@ -1,10 +1,58 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .App{
   width: 100vw;
   height: 100vh;
   box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: block;
+  text-align: center;
+}
+
+.App h1{
+  padding-top: 20px;
+  padding-bottom: 50px;
+}
+.container{
+  width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 800px 1fr;
+  gap: 30px;
+}
+
+.option-box{
+  box-sizing: border-box;
+  height: 800px;
+  font-size: 24px;
+  text-align: center;
+  width: 200px;
+}
+.option-box p{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.option-box p.active{
+  font-size: 30px;
+  color: slateblue;
+  font-weight: bold;
+}
+.option-box button{
+  all: unset;
+  box-sizing: border-box;
+  margin-top: 20px;
+  width: 100%;
+  border: solid 1px steelblue;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.option-box button:hover{
+  background-color: steelblue;
+  color: white;
 }
 
 .piece-box{
@@ -20,8 +68,12 @@
   animation: upDown 1.5s infinite ease-out;
 }
 .piece-box.road{
-  opacity: 0.6;
+  opacity: .7;
   background-color: violet;
+}
+.piece-box.check-mate{
+  opacity: .7;
+  background-color: red;
 }
 @keyframes upDown {
   0%{
@@ -80,8 +132,8 @@
 }
 
 .white{
-  fill: white;
+  /* filter: opacity(0.5) drop-shadow(0 0 0 white); */
 }
 .black{
-  filter: brightness(0);
+  filter: brightness(0.1);
 }

@@ -5,6 +5,7 @@ section{
     height: 800px;
 }
 
+
 section .line{
     display: grid;
     grid-template-columns: repeat(8, 100px);
