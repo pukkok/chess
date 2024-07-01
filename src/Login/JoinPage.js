@@ -12,17 +12,17 @@ function JoinPage () {
         }
     }
 
-    const [UserInfo, setUserInfo] = useState({userId: '', nickName: '', password: '', confirmPassword: ''})
+    const [userInfo, setUserInfo] = useState({userId: '', nickName: '', password: '', confirmPassword: ''})
 
     const joinInputChange = (e) => {
         const {name, value} = e.target
-        setUserInfo({...UserInfo, [name] : value})
+        setUserInfo({...userInfo, [name] : value})
     }
 
     const sendUserInfo = async (e) => {
         e.preventDefault()
         const {data} = await axios.post('/chess/join', {
-            ...UserInfo
+            ...userInfo
         })
         console.log(data)
     }
@@ -35,19 +35,19 @@ function JoinPage () {
                 <form>
                     <label className="nick-name">
                         <span>닉네임</span>
-                        <input type="text" name="nickName" onChange={joinInputChange} value={UserInfo.nickName}/>
+                        <input type="text" name="nickName" onChange={joinInputChange} value={userInfo.nickName}/>
                     </label>
                     <label className="id-label">
                         <span>ID</span>
-                        <input type="text" name="userId" onChange={joinInputChange} value={UserInfo.userId}/>
+                        <input type="text" name="userId" onChange={joinInputChange} value={userInfo.userId}/>
                     </label>
                     <label className="pw-label">
                         <span>비밀번호</span>
-                        <input type="password" name="password" onChange={joinInputChange} value={UserInfo.password}/>
+                        <input type="password" name="password" onChange={joinInputChange} value={userInfo.password}/>
                     </label>
                     <label className="cf-pw-label">
                         <span>비밀번호 확인</span>
-                        <input type="password" name="confirmPassword" onChange={joinInputChange} value={UserInfo.confirmPassword}/>
+                        <input type="password" name="confirmPassword" onChange={joinInputChange} value={userInfo.confirmPassword}/>
                     </label>
                     
                     <button onClick={sendUserInfo}>완료</button>

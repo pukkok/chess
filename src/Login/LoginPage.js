@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import './LoginPage.css'
 import { Link, useNavigate } from "react-router-dom";
 
@@ -11,9 +11,17 @@ function LoginPage () {
         }
     }
 
+    const [userInfo, setUserInfo] = useState({userId:'', password:''})
+    const loginInputChange = (e) => {
+        const {name, value} = e.target
+        setUserInfo({...userInfo, [name] : value})
+    }
     const login = async (e) => {
         e.preventDefault()
-        console.log('동작')
+        const {data} = await axios.post('/chess/login', {
+            ...userInfo
+        })
+        console.log(data)
     }
 
     return (
@@ -23,11 +31,11 @@ function LoginPage () {
                 <form>
                     <label className="id-label">
                         <span>ID</span>
-                        <input type="text"/>    
+                        <input type="text" name="userId" onChange={loginInputChange} value={userInfo.userId}/>    
                     </label>
                     <label className="pw-label">
                         <span>PW</span>
-                        <input type="password"/>
+                        <input type="password" name="password" onChange={loginInputChange} value={userInfo.password}/>
                     </label>
                     <button onClick={login}>로그인</button>
                 </form>
