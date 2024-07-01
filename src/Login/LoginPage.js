@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import './LoginPage.css'
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function LoginPage () {
 
@@ -22,6 +23,9 @@ function LoginPage () {
             ...userInfo
         })
         console.log(data)
+        if(data.code === 200){
+            localStorage.setItem('token', JSON.stringify(data.token))
+        }
     }
 
     return (
