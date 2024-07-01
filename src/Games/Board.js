@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import './Board.css'
 import ChessPiece from "./Piece";
 import Rules from "./Rules";
 import { useRecoilState } from "recoil";
@@ -120,7 +119,7 @@ function Board () {
     },[caughtPiece, games])
 
     return(
-        <section>
+        <section className="board">
             {games.map((line, row) => {
                 return <div className="line" key={row}>
                     {line.map((box, col) => {

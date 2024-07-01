@@ -1,0 +1,133 @@
+.login{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-image: linear-gradient(rgba(255,255,255,.2), rgba(255,255,255,.2));
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login .box{
+    width: 400px;
+    height: 300px;
+    background-color: #fff;
+}
+
+.login h1{
+    padding: 10px 20px;
+    border-bottom: 1px solid #e1e1e1;
+}
+.login h1 span{
+    font-size: 16px;
+    color: slateblue;
+    margin-left: 10px;
+}
+
+.login form{
+    margin: 10px 20px 0;
+    display: grid;
+    grid-template-areas: 
+    'id btn'
+    'pw btn';
+    grid-template-columns: 230px 1fr;
+    gap: 10px;
+}
+
+.login form .id-label{
+    grid-area: id;
+}
+.login form .pw-label{
+    grid-area: pw;
+}
+.login form button{
+    grid-area: btn;
+}
+
+.login form label{
+    height: 50px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.login form label span{
+    width: 50px;
+    font-size: 20px;
+}
+
+.login form label input{
+    border: none;
+    border-bottom: 1px solid #7c7c7c;
+    padding-left: 10px;
+    width: 170px;
+    outline: none;
+    height: 100%;
+    font-size: 20px;
+}
+.login form label input:focus{
+    border-bottom: 2px solid steelblue;
+}
+.login form button{
+    background-color: slateblue;
+    text-align: center;
+    color: #fff;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+.login .btn-box{
+    width: 100%;
+    display: flex;
+    gap: 16px;
+    padding: 30px 20px 10px;
+}
+.login .btn-box button{
+    box-sizing: border-box;
+    width: 50%;
+    padding: 10px 10px;
+    background-color: steelblue;
+    color: #fff;
+    cursor: pointer;
+}
+
+.login button:hover{
+    opacity: .8;
+}
+
+.login .join{
+    width: 400px;
+    height: 380px;
+    background-color: #fff;
+}
+
+.login .join form{
+    grid-template-areas: 
+    'nick'
+    'id'
+    'pw'
+    'cf-pw'
+    'btn';
+    grid-template-columns: none;
+}
+
+.login .join form span{
+    width: 130px;
+}
+.login .join form input{
+    flex: 1;
+    margin-left: 20px;
+}
+.login .join form .nick-name{
+    grid-area: nick;
+}
+.login .join form .cf-pw-label{
+    grid-area: cf-pw;
+}
+.login .join form button{
+    height: 50px;
+}
