@@ -135,10 +135,8 @@ const Rules = ({coords, piece, color, on}, games) => {
         if(piece === 'Bishop' || piece === 'Queen'){
             for(let i=1; i<8; i++){ // 좌 위
                 const breaker = vertical-i >=0 && horizon-i >=0 && games[vertical-i][horizon-i]
-                console.log(breaker)
                 if(breaker){
                     const point = (vertical-i) + '-' + (horizon-i)
-                    console.log(point)
                     if(breaker.color === 'none'){
                         possibleCases = [...possibleCases, point]
                     }else if(breaker.color === color){
@@ -194,8 +192,6 @@ const Rules = ({coords, piece, color, on}, games) => {
                 }
             }
             
-            
-
             if(piece === 'Bishop'){
                 return possibleCases
             }

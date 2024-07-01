@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import chessBoard from "../ChessBoard";
+import chessBoard from "../Games/ChessBoard";
 
 const gamesAtom = atom({
     key: 'games',
@@ -11,7 +11,13 @@ const turnAtom = atom({
     default: 'black'
 })
 
+const isEndAtom = atom({
+    key: 'isEnd',
+    default : false
+})
+
 export {
     turnAtom,
-    gamesAtom
+    gamesAtom,
+    isEndAtom
 }

@@ -3,19 +3,21 @@ import './Board.css'
 import ChessPiece from "./Piece";
 import Rules from "./Rules";
 import { useRecoilState } from "recoil";
-import { gamesAtom, turnAtom } from "./Recoil/ChessAtom";
+import { gamesAtom, isEndAtom, turnAtom } from "../Recoil/ChessAtom";
+import classNames from "classnames";
 
 function Board () {
     const [games, setGames] = useRecoilState(gamesAtom)
     const [caughtPiece, setCaughtPiece] = useState({coords :'', piece:'', color: 'black', on:false})
     const [possibleMove, setPossibleMove] = useState([])
-    const [checkMate, setCheckMate] = useState({})
+    const [checkMates, setCheckMates] = useState([])
+    const [pinch, setPinch] = useState({})
     const [turn, setTurn] = useRecoilState(turnAtom)
 
-    const [endGame, setEndGame] = useState(false)
+    const [isEnd, setisEnd] = useRecoilState(isEndAtom)
 
-    const catchPiece = (e, coords, color, piece, turn, endGame) => {
-        if(endGame){
+    const catchPiece = (e, coords, color, piece, turn, isEnd) => {
+        if(isEnd){
             return
         }
 
@@ -44,7 +46,7 @@ function Board () {
                             const checkMate = games[moveRow][moveCol]
                             if(checkMate.piece === 'King'){
                                 alert(turn + '의 승리')
-                                setEndGame(true)
+                                setisEnd(true)
                             }
                         }
                         
@@ -76,25 +78,45 @@ function Board () {
         }        
     }
 
+
     useEffect(()=>{
         const result = Rules({...caughtPiece}, games)
-        setPossibleMove(result)
+
+        let mates = []
         if(!caughtPiece.on){
-            const nextResult = Rules({...caughtPiece, on: true}, games)
-            console.log(nextResult)
-            if(nextResult){
-                nextResult.forEach(coords => {
-                    let ver = coords.split('-')[0]
-                    let hor = coords.split('-')[1]
-                    let check = games[ver][hor].piece
-                    if(check === 'King'){ // 체크메이트
-                        console.log('왕 발견')
-                        console.log(turn)
-                        setCheckMate({color: turn, piece: check, coords})
+            games.forEach((line, row) => {
+                line.forEach((box, col) => {
+                    if(box.piece !== 'none'){
+                        const coords = row + '-' + col
+                        const {piece, color} = box
+                        const moves = Rules({piece, color, coords, on:true}, games)
+
+                        if(moves.length>0){
+                            
+                            moves.forEach(move => {
+                                const ver = move.split('-')[0]
+                                const hor = move.split('-')[1]
+                                const enemyChecker = games[ver][hor]
+                                
+                                if(enemyChecker.piece === 'King' && enemyChecker.color !== color){
+                                    mates = [...mates, coords]
+                                    setPinch({color: turn, piece: enemyChecker.piece, coords : move})
+                                }
+                            })
+
+                        }
+                        
                     }
                 })
+            })
+
+            if(mates.length === 0){
+                setPinch({})
             }
+            
         }
+        setCheckMates(mates)
+        setPossibleMove(result) // 움직일수 있는 위치
     },[caughtPiece, games])
 
     return(
@@ -102,11 +124,14 @@ function Board () {
             {games.map((line, row) => {
                 return <div className="line" key={row}>
                     {line.map((box, col) => {
-                        return <div className="box" key={col} onClick={(e)=>catchPiece(e, `${row}-${col}`, box.color, box.piece, turn, endGame)}>
-                            <ChessPiece color={box.color} piece={box.piece} checkMate={checkMate.coords === `${row}-${col}`}
+                        return <div className={classNames("box", {checkmate : checkMates.includes(`${row}-${col}`)}, {'pinch' : pinch.coords === `${row}-${col}`})} key={col} 
+                        onClick={(e)=>catchPiece(e, `${row}-${col}`, box.color, box.piece, turn, isEnd)}>
+
+                            <ChessPiece color={box.color} piece={box.piece}
                             caughtPiece={`${row}-${col}` === caughtPiece.coords && caughtPiece.on}
                             possibleMove={possibleMove.length>0 && possibleMove.includes(`${row}-${col}`) ? true : false}
                             />
+
                         </div>
                     })}
                 </div>
