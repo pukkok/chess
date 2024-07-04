@@ -20,6 +20,10 @@ const logPosAtom = atom({
     key: 'logPos',
     default : {prevPos: '', curPos: '', piece: '', color: ''}
 })
+const logsAtom = atom({
+    key: 'logs',
+    default : []
+})
 
 const promotionAtom = atom({
     key: 'promotion',
@@ -31,5 +35,6 @@ export {
     gamesAtom,
     isEndAtom,
     logPosAtom,
+    logsAtom,
     promotionAtom
 }

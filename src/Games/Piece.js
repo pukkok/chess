@@ -5,7 +5,7 @@ function ChessPiece ({color="white", piece='none', caughtPiece=false, possibleMo
 
     return(
         <div className={classNames(`piece-box`, {pick : caughtPiece}, {road : possibleMove})}>
-            <img draggable={false} className={`${color} ${piece}`} src={`./chess/piece/chess-piece-white.png`} alt=""/>
+            <img draggable={false} className={`${color} ${piece}`} src={`./piece/chess-piece-white.png`} alt=""/>
         </div>
     )
 

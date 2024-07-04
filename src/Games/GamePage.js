@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import './GamePage.css'
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import Board from './Board';
-import { gamesAtom, isEndAtom, logPosAtom, promotionAtom, turnAtom } from '../Recoil/ChessAtom';
+import { gamesAtom, isEndAtom, logPosAtom, logsAtom, promotionAtom, turnAtom } from '../Recoil/ChessAtom';
 import chessBoard from './ChessBoard';
 import ChessPiece from "./Piece";
 
 function GamePage() {
 
     const [turn, setTurn] = useRecoilState(turnAtom)
-    const [games, setGames] = useRecoilState(gamesAtom)
+    const setGames = useSetRecoilState(gamesAtom)
     const [isEnd, setisEnd] = useRecoilState(isEndAtom)
     const [logPos, setLogPos] = useRecoilState(logPosAtom)
-    const [logs, setLogs] = useState([])
+    const [logs, setLogs] = useRecoilState(logsAtom)
     const [promotion, setPromotion] = useRecoilState(promotionAtom)
 
     useEffect(()=>{
