@@ -3,8 +3,8 @@ const chessBoard = [
         {piece : 'Rook', color: 'black'},
         {piece : 'Knight', color: 'black'},
         {piece : 'Bishop', color: 'black'},
-        {piece: 'King', color: 'black'},
         {piece: 'Queen', color: 'black'},
+        {piece: 'King', color: 'black'},
         {piece : 'Bishop', color: 'black'},
         {piece : 'Knight', color: 'black'},
         {piece : 'Rook', color: 'black'}
@@ -73,8 +73,8 @@ const chessBoard = [
         {piece : 'Rook', color: 'white'},
         {piece : 'Knight', color: 'white'},
         {piece : 'Bishop', color: 'white'},
-        {piece: 'King', color: 'white'},
         {piece: 'Queen', color: 'white'},
+        {piece: 'King', color: 'white'},
         {piece : 'Bishop', color: 'white'},
         {piece : 'Knight', color: 'white'},
         {piece : 'Rook', color: 'white'}

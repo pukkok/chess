@@ -6,10 +6,186 @@
 
 button{
   all: unset;
+  box-sizing: border-box;
   cursor: pointer;
 }
 
 a{
   all: unset;
   display: block;
+}
+
+/* 보드 옵션 */
+.board{
+  display: grid;
+  border: solid 1px black;
+  overflow: hidden;
+  width: 800px;
+  height: 800px;
+}
+
+.board .line{
+  display: grid;
+  grid-template-columns: repeat(8, 100px);
+  grid-template-rows: repeat(1, 100px);
+  width: 100%;
+  height: 100%;
+  background-color: rgb(238, 238, 211);
+  color: rgb(118, 148, 87);
+}
+
+.board .line .box{
+  position: relative;
+}
+
+/* 좌표 표시 */
+.board .box span{
+  padding: 5px;
+  font-size: 22px;
+  font-weight: bold;
+}
+.board .box .numbering{
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.board .box .alpha{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+
+.line:nth-child(2n-1) .box:nth-child(2n),
+.line:nth-child(2n) .box:nth-child(2n-1){
+  background-color: rgb(118, 148, 87);
+  color: rgb(238, 238, 211);
+}
+.board .line .box.pinch{
+  background-color: rgba(255, 25, 25, 0.777) !important;
+}
+.board .line .box.curPos{
+  background-color: rgb(152, 163, 54);
+}
+.board .line .box.prevPos{
+  background-color: rgb(187, 201, 68);
+}
+
+.board .line .box.pinch::before,
+.board .line .box.checkmate::before{
+  content: 'CHECKMATE!';
+  color: black;
+  width: 100%;
+  height: 20px;
+  position: absolute;
+  padding: 5px 10px;
+  top: -15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(231, 231, 82);
+  border-radius: 8px;
+  display: block;
+  animation: check alternate .3s;
+}
+.board .line .box.pinch::before{
+  content: 'PINCH';
+  width: fit-content;
+  min-width: 80px;
+}
+.board .line .box.pinch::after,
+.board .line .box.checkmate::after{
+  content: '';
+  border-top: 10px solid rgb(231, 231, 82);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 0px solid transparent;
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: check .3s;
+}
+
+@keyframes check {
+  0%{
+      scale: 1;
+  }
+  100%{
+      scale: 1.1;
+  }
+}
+
+/* 바닥 옵션 */
+.piece-box{
+  width: 100px;
+  height: 100px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: .5s;
+  top: 0;
+}
+.piece-box.pick{
+  animation: upDown 1.5s infinite ease-out;
+}
+.piece-box.road{
+  opacity: .7;
+  background-color: violet;
+}
+
+@keyframes upDown {
+  0%{
+    top: 0px;
+  }
+  50%{
+    top: -20px;
+  }
+  100%{
+    top: 0px;
+  }
+}
+
+/* 말 옵션 */
+.piece-box .Pawn{
+  position: absolute;
+  height: 160px;
+  top: -45px;
+  left: -35px;
+}
+.piece-box .Rook{
+  position: absolute;
+  height: 160px;
+  top: -45px;
+  left: -112px;
+}
+.piece-box .Knight{
+  position: absolute;
+  height: 160px;
+  top: -30px;
+  left: -205px;
+}
+.piece-box .Bishop{
+  position: absolute;
+  height: 160px;
+  top: -30px;
+  left: -285px;
+}
+.piece-box .Queen{
+  position: absolute;
+  height: 150px;
+  top: -23px;
+  left: -348px;
+}
+.piece-box .King{
+  position: absolute;
+  height: 150px;
+  top: -20px;
+  left: -430px;
+}
+
+.white{
+  filter: opacity(1) drop-shadow(0 0 0 white);
+}
+.black{
+  filter: brightness(0.1);
 }

@@ -1,8 +1,8 @@
-const Rules = ({coords, piece, color, on}, games) => {
+const Rules = ({coords, piece, color, on}, games, logPos) => {
     const vertical = +coords.split('-')[0]
     const horizon = +coords.split('-')[1]
     let possibleCases = []
-    
+    const {prevPos, curPos, piece : logPiece, color: logColor} = logPos
     if(on){
         // 폰 조건
         if(piece ==='Pawn' && color === 'white'){    
@@ -13,7 +13,7 @@ const Rules = ({coords, piece, color, on}, games) => {
             const caseC = vertical>=1 && games[vertical-1][horizon+1] // 오른쪽
             if(caseA && caseA.color === 'none'){
                 const point = (vertical-1) + '-' + horizon
-                possibleCases = [...possibleCases, point]   
+                possibleCases = [...possibleCases, point]
             }
             if(caseB && caseB.color === 'black'){
                 const point = (vertical-1) + '-' + (horizon-1)
@@ -26,10 +26,17 @@ const Rules = ({coords, piece, color, on}, games) => {
 
             if(vertical === 6){ 
                 if(caseA.color === 'none' && caseA_2.color === 'none'){
-                    const point = vertical-2 + '-' + horizon
+                    const point = (vertical-2) + '-' + horizon
                     possibleCases = [...possibleCases, point]
                 }
             }
+
+            if(+prevPos.split('-')[0] === 1 && +curPos.split('-')[0] === 3 && vertical === 3 && logPiece === 'Pawn' && logColor === 'black'){
+                // 백 앙파상
+                const point = (vertical-1) + '-' + curPos.split('-')[1]
+                possibleCases = [...possibleCases, point]
+            }
+
             return possibleCases
         }
 
@@ -56,6 +63,12 @@ const Rules = ({coords, piece, color, on}, games) => {
                     const point = vertical+2 + '-' + horizon
                     possibleCases = [...possibleCases, point]
                 }
+            }
+
+            if(+prevPos.split('-')[0] === 6 && +curPos.split('-')[0] === 4 && vertical === 4 && logPiece === 'Pawn' && logColor === 'white'){
+                // 흑 앙파상
+                const point = (vertical+1) + '-' + curPos.split('-')[1]
+                possibleCases = [...possibleCases, point]
             }
 
             return possibleCases
@@ -196,11 +209,13 @@ const Rules = ({coords, piece, color, on}, games) => {
                 return possibleCases
             }
         }
-
+        
+        // 퀸 조건
         if(piece === 'Queen'){
             return possibleCases
         }
 
+        // 킹 조건 
         if(piece === 'King'){
             const points = [
                 vertical>=1 && horizon>=1 && {v: vertical-1, h: horizon-1},
@@ -218,10 +233,14 @@ const Rules = ({coords, piece, color, on}, games) => {
                     possibleCases = [...possibleCases, possiblePoint]
                 }
             })
+
+            // 캐슬링
+
             return possibleCases
         }
 
     }else{
+        // 프로모션
         if(piece ==='Pawn' && color === 'white'){
             if(vertical === 0){
                 console.log('화이트 폰 변신 준비')

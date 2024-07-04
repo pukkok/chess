@@ -8,7 +8,7 @@ const gamesAtom = atom({
 
 const turnAtom = atom({
     key: 'turn',
-    default: 'black'
+    default: 'white'
 })
 
 const isEndAtom = atom({
@@ -16,8 +16,14 @@ const isEndAtom = atom({
     default : false
 })
 
+const logPosAtom = atom({
+    key: 'logPos',
+    default : {prevPos: '', curPos: '', piece: '', color: ''}
+})
+
 export {
     turnAtom,
     gamesAtom,
-    isEndAtom
+    isEndAtom,
+    logPosAtom
 }

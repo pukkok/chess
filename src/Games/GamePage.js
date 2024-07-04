@@ -1,19 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import './GamePage.css'
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import Board from './Board';
-import { gamesAtom, isEndAtom, turnAtom } from '../Recoil/ChessAtom';
+import { gamesAtom, isEndAtom, logPosAtom, turnAtom } from '../Recoil/ChessAtom';
 import chessBoard from './ChessBoard';
-import classNames from 'classnames';
-import { Link } from "react-router-dom";
 
 function GamePage() {
     const [turn, setTurn] = useRecoilState(turnAtom)
     const setGames = useSetRecoilState(gamesAtom)
     const [isEnd, setisEnd] = useRecoilState(isEndAtom)
-  
+    const logPos = useRecoilValue(logPosAtom)
+    const [logs, setLogs] = useState([])
+    useEffect(()=>{
+      if(logPos.prevPos){
+        setLogs([...logs, logPos])
+      }
+    },[logPos])
     const resetGame = () => {
-      setTurn('black')
+      setTurn('white')
       setGames(JSON.parse(JSON.stringify(chessBoard)))
       setisEnd(false)
     }
@@ -26,23 +30,26 @@ function GamePage() {
     }
 
     return(
-        <section className="game-page">
-            <h1>체스 게임</h1>
-            <div className='container'>
-                <div className='option-box'>
-                    <p className={classNames({active : turn === 'black'})}>흑색 턴!</p>
-                    <button onClick={resetGame}>새게임</button>
-                    <button onClick={()=>giveupGame('white')}>기권</button>
-                    <Link to={'/login'}>로그인</Link>
-                </div>
-                <Board/>
-                <div className='option-box'>
-                    <p className={classNames({active : turn === 'white'})}>흰색 턴!</p>
-                    <button onClick={resetGame}>새게임</button>
-                    <button onClick={()=>giveupGame('black')}>기권</button>
-                </div>
-            </div>
-        </section>
+      <section className="game-page">
+      <h1>체스 게임</h1>
+      <div className='container'>
+          <Board/>
+          <div className='sidebar'>
+              <div className='option-box'>
+                  <p>{turn === 'white' ? '흰색' : '흑색'} 턴!</p>
+                  <button onClick={resetGame}>새게임</button>
+                  <button onClick={()=>giveupGame('white')}>기권</button>
+              </div>
+              <div className='log-box'>
+                  <p>체스 기보</p>
+                  {logs.length>0 && logs.map((log, idx) => {
+                    const {prevPos, curPos, piece, color} = log
+                    return <p key={idx}>{prevPos} {curPos}, {piece} {color}</p>
+                  })}
+              </div>
+          </div>
+      </div>
+      </section>
     )
 }
 

@@ -1,4 +1,4 @@
-.game-page{
+/* .game-page{
     width: 100vw;
     height: 100vh;
     box-sizing: border-box;
@@ -13,7 +13,7 @@
     width: 1240px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 800px 1fr;
+    grid-template-columns: 800px 1fr 1fr;
     gap: 30px;
 }
 
@@ -28,11 +28,6 @@
     margin: 0;
     padding: 0;
     width: 100%;
-}
-.option-box p.active{
-    font-size: 30px;
-    color: slateblue;
-    font-weight: bold;
 }
 
 .option-box a,
@@ -50,145 +45,90 @@
     color: white;
 }
 
-/* 보드 옵션 */
-.board{
-    display: grid;
-    border: solid 1px black;
-    width: 800px;
+.log-box{
+    border: solid 1px grey;
+} */
+
+
+
+
+.game-page {
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+
+.game-page h1 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 36px;
+}
+
+.container {
+    max-width: 1280px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: start;
+    gap: 30px;
+}
+
+.sidebar {
+    width: 400px;
     height: 800px;
-}
-.board .line{
     display: grid;
-    grid-template-columns: repeat(8, 100px);
-    grid-template-rows: repeat(1, 100px);
+    gap: 20px;
+    grid-template-rows: 200px 1fr;
+}
+
+.option-box, .log-box {
     width: 100%;
-    height: 100%;
-    background-color: rgb(237, 184, 104);
-}
-.board .line .box{
-    position: relative;
-}
-.board .line:nth-child(2n-1) .box:nth-child(2n),
-.board .line:nth-child(2n) .box:nth-child(2n-1){
-    background-color: rgb(193, 92, 5);
-}
-.board .line .box.pinch{
-    background-color: rgba(255, 25, 25, 0.777) !important;
-}
-.board .line .box.pinch::before,
-.board .line .box.checkmate::before{
-    content: 'CHECKMATE!';
-    width: 100%;
-    height: 20px;
-    position: absolute;
-    padding: 5px 10px;
-    top: -15%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: beige;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
     border-radius: 8px;
-    display: block;
-    animation: check alternate .3s;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
 }
-.board .line .box.pinch::before{
-    content: '도망가~';
-    width: fit-content;
-    min-width: 80px;
-}
-.board .line .box.pinch::after,
-.board .line .box.checkmate::after{
-    content: '';
-    border-top: 10px solid beige;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 0px solid transparent;
-    position: absolute;
-    top: 0px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation: check .3s;
+.log-box{
+    height: 100%;
 }
 
-@keyframes check {
-    0%{
-        scale: 1;
-    }
-    100%{
-        scale: 1.1;
-    }
+
+.option-box p, .log-box p {
+    margin: 0;
+    padding: 10px 0;
+    font-size: 20px;
 }
 
-/* 바닥 옵션 */
-.piece-box{
-    width: 100px;
-    height: 100px;
-    position: relative;
-    overflow: hidden;
+.option-box button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #007BFF;
+    background-color: #007BFF;
+    color: white;
+    font-size: 18px;
     cursor: pointer;
-    transition: .5s;
-    top: 0;
-}
-.piece-box.pick{
-    animation: upDown 1.5s infinite ease-out;
-}
-.piece-box.road{
-    opacity: .7;
-    background-color: violet;
+    border-radius: 4px;
 }
 
-@keyframes upDown {
-    0%{
-      top: 0px;
-    }
-    50%{
-      top: -20px;
-    }
-    100%{
-      top: 0px;
-    }
+.option-box button:hover {
+    background-color: #0056b3;
 }
 
-/* 말 옵션 */
-.piece-box .Pawn{
-    position: absolute;
-    height: 160px;
-    top: -45px;
-    left: -35px;
+.log-box {
+    overflow-y: auto;
+    text-align: left;
 }
-.piece-box .Rook{
-    position: absolute;
-    height: 160px;
-    top: -45px;
-    left: -112px;
-}
-.piece-box .Knight{
-    position: absolute;
-    height: 160px;
-    top: -30px;
-    left: -205px;
-}
-.piece-box .Bishop{
-    position: absolute;
-    height: 160px;
-    top: -30px;
-    left: -285px;
-}
-.piece-box .Queen{
-    position: absolute;
-    height: 150px;
-    top: -23px;
-    left: -348px;
-}
-.piece-box .King{
-    position: absolute;
-    height: 150px;
-    top: -20px;
-    left: -430px;
-}
-  
-.white{
-    filter: opacity(1) drop-shadow(0 0 0 white);
-}
-.black{
-    filter: brightness(0.1);
+
+.log-box p {
+    font-size: 16px;
+    color: #333;
 }
