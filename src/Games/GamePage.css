@@ -84,7 +84,7 @@
     height: 800px;
     display: grid;
     gap: 20px;
-    grid-template-rows: 200px 1fr;
+    grid-template-rows: 280px 1fr;
 }
 
 .option-box, .log-box {
@@ -99,7 +99,6 @@
 .log-box{
     height: 100%;
 }
-
 
 .option-box p, .log-box p {
     margin: 0;
@@ -131,4 +130,34 @@
 .log-box p {
     font-size: 16px;
     color: #333;
+}
+
+.promotion-bg{
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+}
+
+.promotion-bg .promotion{
+    background-color: #fff;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.promotion-bg .promotion p{
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.promotion-bg .promotion .btn-box{
+    display: flex;
+}
+
+.promotion-bg .promotion .btn-box button:hover{
+    background-color: pink;
+    border-radius: 8px;
 }

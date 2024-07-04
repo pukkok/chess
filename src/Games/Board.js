@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ChessPiece from "./Piece";
 import Rules from "./Rules";
-import { useRecoilState } from "recoil";
-import { gamesAtom, isEndAtom, logPosAtom, turnAtom } from "../Recoil/ChessAtom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { gamesAtom, isEndAtom, logPosAtom, promotionAtom, turnAtom } from "../Recoil/ChessAtom";
 import classNames from "classnames";
 
 function Board () {
@@ -14,6 +14,7 @@ function Board () {
     const [turn, setTurn] = useRecoilState(turnAtom)
     const [logPos, setLogPos] = useRecoilState(logPosAtom)
     const [isEnd, setisEnd] = useRecoilState(isEndAtom)
+    const setPromotion = useSetRecoilState(promotionAtom)
 
     const catchPiece = (e, coords, color, piece, turn, isEnd) => {
         let log = {prevPos: '', curPos: '', piece: '', color: ''}
@@ -136,12 +137,20 @@ function Board () {
 
             if(mates.length === 0){
                 setPinch({})
-            }
-            
+            }            
+        }
+        // 프로모션
+        if(+logPos.curPos.split('-')[0] === 0 && logPos.piece === 'Pawn' && logPos.color === 'white'){
+            console.log('화이트 폰 프로모션')
+            setPromotion(true)
+        }
+        if(+logPos.curPos.split('-')[0] === 7 && logPos.piece === 'Pawn' && logPos.color === 'black'){
+            console.log('블랙 폰 프로모션')
+            setPromotion(true)
         }
         setCheckMates(mates)
         setPossibleMove(result) // 움직일수 있는 위치
-    },[caughtPiece, games])
+    },[caughtPiece, games, logPos])
 
     const alphas = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     return(

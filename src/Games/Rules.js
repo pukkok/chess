@@ -243,12 +243,14 @@ const Rules = ({coords, piece, color, on}, games, logPos) => {
         // 프로모션
         if(piece ==='Pawn' && color === 'white'){
             if(vertical === 0){
-                console.log('화이트 폰 변신 준비')
+                // console.log('화이트 폰 프로모션')
+                possibleCases = ['white promotion']
             }
         }
         if(piece ==='Pawn' && color === 'black'){
             if(vertical === 7){
-                console.log('블랙 폰 변신 준비')
+                console.log('블랙 폰 프로모션')
+                possibleCases = ['black promotion']
             }
         }
         return []

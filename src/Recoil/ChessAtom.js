@@ -21,9 +21,15 @@ const logPosAtom = atom({
     default : {prevPos: '', curPos: '', piece: '', color: ''}
 })
 
+const promotionAtom = atom({
+    key: 'promotion',
+    default : false
+})
+
 export {
     turnAtom,
     gamesAtom,
     isEndAtom,
-    logPosAtom
+    logPosAtom,
+    promotionAtom
 }
