@@ -16,6 +16,11 @@ const isEndAtom = atom({
     default : false
 })
 
+const checksAtom = atom({
+    key: 'checks',
+    default : []
+})
+
 const notationAtom = atom({
     key: 'notation',
     default : {prev: {}, prevPos: '', curPos: '', piece: '', color: ''}
@@ -34,6 +39,7 @@ export {
     turnAtom,
     gamesAtom,
     isEndAtom,
+    checksAtom,
     notationAtom,
     notesAtom,
     isPromotionAtom

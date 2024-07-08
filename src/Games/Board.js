@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import ChessPiece from "./Piece";
 import Rules from "./Rules";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { gamesAtom, isEndAtom, notationAtom, isPromotionAtom, turnAtom } from "../Recoil/ChessAtom";
+import { gamesAtom, isEndAtom, notationAtom, isPromotionAtom, turnAtom, checksAtom } from "../Recoil/ChessAtom";
 import classNames from "classnames";
 
 function Board () {
     const [games, setGames] = useRecoilState(gamesAtom)
     const [caughtPiece, setCaughtPiece] = useState({coords :'', piece:'', color: 'black', on:false})
     const [possibleMoves, setPossibleMoves] = useState([]) // 움직일수 있는 곳
-    const [checkMates, setCheckMates] = useState([]) // 체크메이트 하는 기물
+    const [checks, setChecks] = useRecoilState(checksAtom) // 체크하는 기물
     const [pinch, setPinch] = useState({}) // 당하는 킹
     const [turn, setTurn] = useRecoilState(turnAtom)
     const [notation, setNotation] = useRecoilState(notationAtom)
@@ -56,6 +56,7 @@ function Board () {
                     log = {...log, prev: games[idx1][idx2], curPos : `${moveRow}-${moveCol}`, piece, color}
                     // 바뀌는 곳
                     box = {piece, color}
+                    
                     const checkMate = games[moveRow][moveCol]
                     if(checkMate.piece === 'King'){
                         alert(turn + '의 승리')
@@ -90,45 +91,34 @@ function Board () {
         if(log.curPos){
             setNotation({...log})
         }
+        setChecks(checkForCheckmates())
         setGames(changePosition)
         setCaughtPiece({coords, color: caughtPiece.color, piece : caughtPiece.piece, on: false})
         const changeTurn = caughtPiece.color === 'black' ? 'white' : 'black'
         setTurn(changeTurn)
-    }
 
-    console.log(notation)
+        function checkForCheckmates () {
+            let mates = [];
+            const moves = Rules({ piece: piece, color: color, coords, on: true }, games, notation)
+            moves.forEach(move => {
+                const [ver, hor] = move.split('-').map(Number);
+                const enemyChecker = games[ver][hor];
+                if (enemyChecker.piece === 'King' && enemyChecker.color !== color) {
+                    mates.push(coords);
+                    setPinch({ color: turn, piece: enemyChecker.piece, coords: move });
+                }
+            })
+            if (mates.length === 0) setPinch({});
+            return mates;
+        };
+    }
 
     useEffect(()=>{
 
         const updateMoves = () => {
             const result = Rules({ ...caughtPiece }, games, notation)
             setPossibleMoves(result)
-            setCheckMates(checkForCheckmates())
             handlePromotion()
-        };
-
-        const checkForCheckmates = () => {
-            let mates = [];
-            if (!caughtPiece.on) {
-                games.forEach((line, row) => {
-                    line.forEach((box, col) => {
-                        if (box.piece !== 'none') {
-                            const coords = `${row}-${col}`;
-                            const moves = Rules({ piece: box.piece, color: box.color, coords, on: true }, games, notation);
-                            moves.forEach(move => {
-                                const [ver, hor] = move.split('-').map(Number);
-                                const enemyChecker = games[ver][hor];
-                                if (enemyChecker.piece === 'King' && enemyChecker.color !== box.color) {
-                                    mates.push(coords);
-                                    setPinch({ color: turn, piece: enemyChecker.piece, coords: move });
-                                }
-                            });
-                        }
-                    });
-                });
-            }
-            if (mates.length === 0) setPinch({});
-            return mates;
         };
 
         // 프로모션
@@ -149,7 +139,7 @@ function Board () {
             {games.map((line, row) => {
                 return <div className="line" key={row}>
                     {line.map((box, col) => {
-                        return <div className={classNames("box", {curPos : notation.curPos === `${row}-${col}`, prevPos : notation.prevPos === `${row}-${col}`}, {checkmate : checkMates.includes(`${row}-${col}`)}, {'pinch' : pinch.coords === `${row}-${col}`})} key={col} 
+                        return <div className={classNames("box", {curPos : notation.curPos === `${row}-${col}`, prevPos : notation.prevPos === `${row}-${col}`}, {checkmate : checks.includes(`${row}-${col}`)}, {'pinch' : pinch.coords === `${row}-${col}`})} key={col} 
                         onClick={(e)=>handelPieceClick(e, `${row}-${col}`, box.color, box.piece, turn, isEnd)}>
                             {col=== 0 && <span className="numbering">{8-row}</span>}
                             {row === 7 && <span className="alpha">{alphas[col]}</span>} 

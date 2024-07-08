@@ -1,12 +1,13 @@
 import React, {useEffect} from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { gamesAtom, notationAtom, notesAtom } from "../Recoil/ChessAtom";
+import { checksAtom, gamesAtom, notationAtom, notesAtom } from "../Recoil/ChessAtom";
 
 function Notation () {
     const games = useRecoilValue(gamesAtom)
     const [notation, setNotation] = useRecoilState(notationAtom)
     const [notes, setNotes] = useRecoilState(notesAtom)
-
+    const checks = useRecoilValue(checksAtom)
+    // console.log(checks)
     useEffect(()=>{
 
         const cols = [8, 7, 6, 5, 4, 3, 2, 1]
@@ -14,9 +15,10 @@ function Notation () {
 
         if(notation.prevPos){
             const {prev, prevPos, curPos, piece, color} = notation
-            let a = games[prevPos.split('-')[0]][prevPos.split('-')[1]]
             
-            let text
+            
+            let text = ''
+            // 기물 표시
             const swtichPieceNote = (piece) => {
                 switch(piece) {
                     case 'King' : return 'K'
@@ -28,17 +30,23 @@ function Notation () {
                 }
             }
             text = text + swtichPieceNote(piece)
-            console.log(text)
+
+            // 상대 기물을 잡았을 때
             if(prev.color !== 'none' && prev.color !== color){
+                !text ?
+                text = rows[prevPos.split('-')[0]] + 'x' :
                 text = text + 'x'
             }
 
-            const row = curPos.split('-')[0]
-            const col = curPos.split('-')[1]
+            // 좌표 표시
+            const [row, col] = curPos.split('-').map(Number)
             const posNote = rows[row] + cols[col]
-
             text = text + posNote
             
+            // 체크일때
+            if(checks.length>0){
+                text = text + '+'
+            }
             
             setNotes(prev => [...prev, text])
         }
