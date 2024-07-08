@@ -1,9 +1,9 @@
 import React, {useEffect} from "react";
-import { useRecoilState } from "recoil";
-import { notationAtom, notesAtom } from "../Recoil/ChessAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { gamesAtom, notationAtom, notesAtom } from "../Recoil/ChessAtom";
 
 function Notation () {
-    
+    const games = useRecoilValue(gamesAtom)
     const [notation, setNotation] = useRecoilState(notationAtom)
     const [notes, setNotes] = useRecoilState(notesAtom)
 
@@ -13,8 +13,9 @@ function Notation () {
         const rows = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 
         if(notation.prevPos){
-            const {prevPos, curPos, piece, color} = notation
-
+            const {prev, prevPos, curPos, piece, color} = notation
+            let a = games[prevPos.split('-')[0]][prevPos.split('-')[1]]
+            
             let text
             const swtichPieceNote = (piece) => {
                 switch(piece) {
@@ -26,13 +27,17 @@ function Notation () {
                     default : return ''
                 }
             }
-            const pieceNote = swtichPieceNote(piece)
-            
+            text = text + swtichPieceNote(piece)
+            console.log(text)
+            if(prev.color !== 'none' && prev.color !== color){
+                text = text + 'x'
+            }
+
             const row = curPos.split('-')[0]
             const col = curPos.split('-')[1]
             const posNote = rows[row] + cols[col]
 
-            text = pieceNote + posNote
+            text = text + posNote
             
             
             setNotes(prev => [...prev, text])

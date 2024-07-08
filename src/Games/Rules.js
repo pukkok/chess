@@ -1,120 +1,106 @@
-const Rules = ({coords, piece, color, on}, games, logPos) => {
+const Rules = ({coords, piece, color, on}, games, notation) => {
     const vertical = +coords.split('-')[0]
     const horizon = +coords.split('-')[1]
     let possibleCases = []
-    const {prevPos, curPos, piece : logPiece, color: logColor} = logPos
+    const {prevPos, curPos, piece : logPiece, color: logColor} = notation
+
     if(on){
         // 폰 조건
         if(piece ==='Pawn' && color === 'white'){    
             
-            const caseA = vertical>=1 && games[vertical-1][horizon] // 정면일때
-            const caseA_2 = vertical===6 && games[vertical-2][horizon] // 정면일때
-            const caseB = vertical>=1 && games[vertical-1][horizon-1] // 왼쪽
-            const caseC = vertical>=1 && games[vertical-1][horizon+1] // 오른쪽
-            if(caseA && caseA.color === 'none'){
-                const point = (vertical-1) + '-' + horizon
-                possibleCases = [...possibleCases, point]
+            const moveCase = vertical>=1 && games[vertical-1][horizon] // 정면일때
+            const firstMoveCase = vertical===6 && games[vertical-2][horizon] // 정면일때
+            const leftCase = vertical>=1 && games[vertical-1][horizon-1] // 왼쪽
+            const rightCase = vertical>=1 && games[vertical-1][horizon+1] // 오른쪽
+
+            if(moveCase && moveCase.color === 'none') {
+                possibleCases.push((vertical-1) + '-' + horizon);
             }
-            if(caseB && caseB.color === 'black'){
-                const point = (vertical-1) + '-' + (horizon-1)
-                possibleCases = [...possibleCases, point]
+            if(leftCase && leftCase.color === 'black') {
+                possibleCases.push((vertical-1) + '-' + (horizon-1));
             }
-            if(caseC && caseC.color === 'black'){
-                const point = (vertical-1) + '-' + (horizon+1)
-                possibleCases = [...possibleCases, point]
+            if(rightCase && rightCase.color === 'black') {
+                possibleCases.push((vertical-1) + '-' + (horizon+1));
+            }
+            if(vertical === 6 && moveCase.color === 'none' && firstMoveCase.color === 'none') {
+                possibleCases.push((vertical-2) + '-' + horizon);
+            }
+            // 백 앙파상
+            if(+prevPos.split('-')[0] === 1 && +curPos.split('-')[0] === 3 && vertical === 3 && logPiece === 'Pawn' && logColor === 'black') {
+                possibleCases.push((vertical-1) + '-' + curPos.split('-')[1]);
             }
 
-            if(vertical === 6){ 
-                if(caseA.color === 'none' && caseA_2.color === 'none'){
-                    const point = (vertical-2) + '-' + horizon
-                    possibleCases = [...possibleCases, point]
-                }
-            }
-
-            if(+prevPos.split('-')[0] === 1 && +curPos.split('-')[0] === 3 && vertical === 3 && logPiece === 'Pawn' && logColor === 'black'){
-                // 백 앙파상
-                const point = (vertical-1) + '-' + curPos.split('-')[1]
-                possibleCases = [...possibleCases, point]
-            }
-
-            return possibleCases
+            return possibleCases;
         }
 
         if(piece ==='Pawn' && color === 'black'){    
             
-            const caseA = vertical<=6 && games[vertical+1][horizon] // 정면일때
-            const caseA_2 = vertical===1 && games[vertical+2][horizon] // 정면일때
-            const caseB = vertical<=6 && games[vertical+1][horizon-1] // 왼쪽
-            const caseC = vertical<=6 && games[vertical+1][horizon+1] // 오른쪽
-            if(caseA.color === 'none'){
-                const point = (vertical+1) + '-' + horizon
-                possibleCases = [...possibleCases, point]
+            const moveCase = vertical<=6 && games[vertical+1][horizon] // 정면일때
+            const firstMoveCase = vertical===1 && games[vertical+2][horizon] // 정면일때
+            const leftCase = vertical<=6 && games[vertical+1][horizon-1] // 왼쪽
+            const rightCase = vertical<=6 && games[vertical+1][horizon+1] // 오른쪽
+            
+            if(moveCase && moveCase.color === 'none') {
+                possibleCases.push((vertical+1) + '-' + horizon);
             }
-            if(caseB && caseB.color === 'white'){
-                const point = (vertical+1) + '-' + (horizon-1)
-                possibleCases = [...possibleCases, point]
+            if(leftCase && leftCase.color === 'white') {
+                possibleCases.push((vertical+1) + '-' + (horizon-1));
             }
-            if(caseC && caseC.color === 'white'){
-                const point = (vertical+1) + '-' + (horizon+1)
-                possibleCases = [...possibleCases, point]
+            if(rightCase && rightCase.color === 'white') {
+                possibleCases.push((vertical+1) + '-' + (horizon+1));
             }
-            if(vertical === 1){
-                if(caseA.color === 'none' && caseA_2.color === 'none'){
-                    const point = vertical+2 + '-' + horizon
-                    possibleCases = [...possibleCases, point]
-                }
+            if(vertical === 1 && moveCase.color === 'none' && firstMoveCase.color === 'none') {
+                possibleCases.push((vertical+2) + '-' + horizon);
             }
-
-            if(+prevPos.split('-')[0] === 6 && +curPos.split('-')[0] === 4 && vertical === 4 && logPiece === 'Pawn' && logColor === 'white'){
-                // 흑 앙파상
-                const point = (vertical+1) + '-' + curPos.split('-')[1]
-                possibleCases = [...possibleCases, point]
+            // 흑 앙파상
+            if(+prevPos.split('-')[0] === 6 && +curPos.split('-')[0] === 4 && vertical === 4 && logPiece === 'Pawn' && logColor === 'white') {
+                possibleCases.push((vertical+1) + '-' + curPos.split('-')[1]);
             }
 
-            return possibleCases
+            return possibleCases;
         }
 
         // 룩 조건
         if(piece === 'Rook' || piece === 'Queen'){
-            for(let i=vertical+1; i<8; i++){
-                if(games[i][horizon].color === 'none'){
-                    possibleCases = [...possibleCases, (i) + '-' + horizon]
-                }else if(games[i][horizon].color === color){
-                    break
-                }else{
-                    possibleCases = [...possibleCases, (i) + '-' + horizon]
-                    break
+            for(let i = vertical+1; i < 8; i++) {
+                if(games[i][horizon].color === 'none') {
+                    possibleCases.push(i + '-' + horizon);
+                } else if(games[i][horizon].color === color) {
+                    break;
+                } else {
+                    possibleCases.push(i + '-' + horizon);
+                    break;
                 }
             }
-            for(let j=vertical-1; j>=0; j--){
-                if(games[j][horizon].color === 'none'){
-                    possibleCases = [...possibleCases, (j) + '-' + horizon]
-                }else if(games[j][horizon].color === color){
-                    break
-                }else{
-                    possibleCases = [...possibleCases, (j) + '-' + horizon]
-                    break
+            for(let j = vertical-1; j >= 0; j--) {
+                if(games[j][horizon].color === 'none') {
+                    possibleCases.push(j + '-' + horizon);
+                } else if(games[j][horizon].color === color) {
+                    break;
+                } else {
+                    possibleCases.push(j + '-' + horizon);
+                    break;
                 }
             }
 
-            for(let i=horizon+1; i<8; i++){
-                if(games[vertical][i].color === 'none'){
-                    possibleCases = [...possibleCases, vertical + '-' + (i)]
-                }else if(games[vertical][i].color === color){
-                    break
-                }else{
-                    possibleCases = [...possibleCases, vertical + '-' + (i)]
-                    break
+            for(let i = horizon+1; i < 8; i++) {
+                if(games[vertical][i].color === 'none') {
+                    possibleCases.push(vertical + '-' + i);
+                } else if(games[vertical][i].color === color) {
+                    break;
+                } else {
+                    possibleCases.push(vertical + '-' + i);
+                    break;
                 }
             }
-            for(let j=horizon-1; j>=0; j--){
-                if(games[vertical][j].color === 'none'){
-                    possibleCases = [...possibleCases, vertical + '-' + (j)]
-                }else if(games[vertical][j].color === color){
-                    break
-                }else{
-                    possibleCases = [...possibleCases, vertical + '-' + (j)]
-                    break
+            for(let j = horizon-1; j >= 0; j--) {
+                if(games[vertical][j].color === 'none') {
+                    possibleCases.push(vertical + '-' + j);
+                } else if(games[vertical][j].color === color) {
+                    break;
+                } else {
+                    possibleCases.push(vertical + '-' + j);
+                    break;
                 }
             }
 
@@ -146,61 +132,61 @@ const Rules = ({coords, piece, color, on}, games, logPos) => {
 
         // 비숍 조건
         if(piece === 'Bishop' || piece === 'Queen'){
-            for(let i=1; i<8; i++){ // 좌 위
-                const breaker = vertical-i >=0 && horizon-i >=0 && games[vertical-i][horizon-i]
-                if(breaker){
-                    const point = (vertical-i) + '-' + (horizon-i)
-                    if(breaker.color === 'none'){
-                        possibleCases = [...possibleCases, point]
-                    }else if(breaker.color === color){
-                        break
-                    }else{
-                        possibleCases = [...possibleCases, point]
-                        break
+            for(let i = 1; i < 8; i++) { // top-left
+                const breaker = vertical-i >= 0 && horizon-i >= 0 && games[vertical-i][horizon-i];
+                if(breaker) {
+                    const point = (vertical-i) + '-' + (horizon-i);
+                    if(breaker.color === 'none') {
+                        possibleCases.push(point);
+                    } else if(breaker.color === color) {
+                        break;
+                    } else {
+                        possibleCases.push(point);
+                        break;
                     }
                 }
             }
 
-            for(let i=1; i<7; i++){ // 우 위
-                const breaker = vertical-i >=0 && horizon+i <=7 && games[vertical-i][horizon+i]
-                if(breaker){
-                    const point = (vertical-i) + '-' + (horizon+i)
-                    if(breaker.color === 'none'){
-                        possibleCases = [...possibleCases, point]
-                    }else if(breaker.color === color){
-                        break
-                    }else{
-                        possibleCases = [...possibleCases, point]
-                        break
+            for(let i = 1; i < 7; i++) { // top-right
+                const breaker = vertical-i >= 0 && horizon+i <= 7 && games[vertical-i][horizon+i];
+                if(breaker) {
+                    const point = (vertical-i) + '-' + (horizon+i);
+                    if(breaker.color === 'none') {
+                        possibleCases.push(point);
+                    } else if(breaker.color === color) {
+                        break;
+                    } else {
+                        possibleCases.push(point);
+                        break;
                     }
                 }
             }
 
-            for(let i=1; i<8; i++){ // 좌 아래
-                const breaker = vertical+i <=7 && horizon-i >=0 && games[vertical+i][horizon-i]
-                if(breaker){
-                    const point = (vertical+i) + '-' + (horizon-i)
-                    if(breaker.color === 'none'){
-                        possibleCases = [...possibleCases, point]
-                    }else if(breaker.color === color){
-                        break
-                    }else{
-                        possibleCases = [...possibleCases, point]
-                        break
+            for(let i = 1; i < 8; i++) { // bottom-left
+                const breaker = vertical+i <= 7 && horizon-i >= 0 && games[vertical+i][horizon-i];
+                if(breaker) {
+                    const point = (vertical+i) + '-' + (horizon-i);
+                    if(breaker.color === 'none') {
+                        possibleCases.push(point);
+                    } else if(breaker.color === color) {
+                        break;
+                    } else {
+                        possibleCases.push(point);
+                        break;
                     }
                 }
             }
-            for(let i=1; i<8; i++){ // 우 아래
-                const breaker = vertical+i <=7 && horizon+i <=7 && games[vertical+i][horizon+i]
-                if(breaker){
-                    const point = (vertical+i) + '-' + (horizon+i)
-                    if(breaker.color === 'none'){
-                        possibleCases = [...possibleCases, point]
-                    }else if(breaker.color === color){
-                        break
-                    }else{
-                        possibleCases = [...possibleCases, point]
-                        break
+            for(let i = 1; i < 8; i++) { // bottom-right
+                const breaker = vertical+i <= 7 && horizon+i <= 7 && games[vertical+i][horizon+i];
+                if(breaker) {
+                    const point = (vertical+i) + '-' + (horizon+i);
+                    if(breaker.color === 'none') {
+                        possibleCases.push(point);
+                    } else if(breaker.color === color) {
+                        break;
+                    } else {
+                        possibleCases.push(point);
+                        break;
                     }
                 }
             }
@@ -227,6 +213,7 @@ const Rules = ({coords, piece, color, on}, games, logPos) => {
                 vertical<=6 && {v: vertical+1, h: horizon},
                 vertical<=6 && horizon<=6 && {v: vertical+1, h: horizon+1},
             ]
+
             points.forEach(point => {
                 if(point && games[point.v][point.h].color !== color){
                     const possiblePoint = point.v + '-' + point.h
@@ -235,24 +222,24 @@ const Rules = ({coords, piece, color, on}, games, logPos) => {
             })
 
             // 캐슬링
+            if(vertical === 7 && horizon === 4){
+                if(games[vertical][5].color === 'none' && 
+                    games[vertical][6].color === 'none'){
+                        games.forEach(rows => {
+                            rows.forEach(item => {
+                                if(item.color === 'black'){
+
+                                }
+                            })
+                        })
+                        possibleCases = [...possibleCases, vertical + '-' + 6]
+                }
+            }
 
             return possibleCases
         }
 
     }else{
-        // 프로모션
-        if(piece ==='Pawn' && color === 'white'){
-            if(vertical === 0){
-                // console.log('화이트 폰 프로모션')
-                possibleCases = ['white promotion']
-            }
-        }
-        if(piece ==='Pawn' && color === 'black'){
-            if(vertical === 7){
-                // console.log('블랙 폰 프로모션')
-                possibleCases = ['black promotion']
-            }
-        }
         return []
     }
 

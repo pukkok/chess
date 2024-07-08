@@ -18,7 +18,7 @@ const isEndAtom = atom({
 
 const notationAtom = atom({
     key: 'notation',
-    default : {prevPos: '', curPos: '', piece: '', color: ''}
+    default : {prev: {}, prevPos: '', curPos: '', piece: '', color: ''}
 })
 const notesAtom = atom({
     key: 'notes',
