@@ -16,17 +16,17 @@ const isEndAtom = atom({
     default : false
 })
 
-const logPosAtom = atom({
-    key: 'logPos',
+const notationAtom = atom({
+    key: 'notation',
     default : {prevPos: '', curPos: '', piece: '', color: ''}
 })
-const logsAtom = atom({
-    key: 'logs',
+const notesAtom = atom({
+    key: 'notes',
     default : []
 })
 
-const promotionAtom = atom({
-    key: 'promotion',
+const isPromotionAtom = atom({
+    key: 'isPromotion',
     default : false
 })
 
@@ -34,7 +34,7 @@ export {
     turnAtom,
     gamesAtom,
     isEndAtom,
-    logPosAtom,
-    logsAtom,
-    promotionAtom
+    notationAtom,
+    notesAtom,
+    isPromotionAtom
 }

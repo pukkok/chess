@@ -1,57 +1,3 @@
-/* .game-page{
-    width: 100vw;
-    height: 100vh;
-    box-sizing: border-box;
-    display: block;
-    text-align: center;
-}
-.game-page h1{
-    padding-top: 20px;
-    padding-bottom: 50px;
-}
-.container{
-    width: 1240px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 800px 1fr 1fr;
-    gap: 30px;
-}
-
-.option-box{
-    box-sizing: border-box;
-    height: 800px;
-    font-size: 24px;
-    text-align: center;
-    width: 200px;
-}
-.option-box p{
-    margin: 0;
-    padding: 0;
-    width: 100%;
-}
-
-.option-box a,
-.option-box button{
-    box-sizing: border-box;
-    margin-top: 20px;
-    width: 100%;
-    border: solid 1px steelblue;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-.option-box a:hover,
-.option-box button:hover{
-    background-color: steelblue;
-    color: white;
-}
-
-.log-box{
-    border: solid 1px grey;
-} */
-
-
-
-
 .game-page {
     width: 100vw;
     height: 100vh;
@@ -87,7 +33,7 @@
     grid-template-rows: 280px 1fr;
 }
 
-.option-box, .log-box {
+.option-box, .notation-box {
     width: 100%;
     padding: 20px;
     background-color: white;
@@ -96,14 +42,38 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     flex: 1;
 }
-.log-box{
+.notation-box{
     height: 100%;
 }
 
-.option-box p, .log-box p {
+.option-box h4, .notation-box h4 {
     margin: 0;
     padding: 10px 0;
     font-size: 20px;
+}
+
+.notation-box p{
+    display: grid;
+    border: 1px solid #333;
+    grid-template-columns: 20px repeat(2, 1fr);
+    padding: 15px;
+    row-gap: 15px;
+    font-size: 20px;
+}
+.notation-box p span{
+    font-size: 20px;
+    
+}
+
+
+.notation-box p .move{
+    padding-right: 10px;
+}
+
+.notation-box p span:not(.move){
+    margin-left: 20px;
+    border-bottom: solid 1px #a0a0a0;
+    color: #0056b3;
 }
 
 .option-box button {
@@ -122,12 +92,12 @@
     background-color: #0056b3;
 }
 
-.log-box {
+.notation-box {
     overflow-y: auto;
     text-align: left;
 }
 
-.log-box p {
+.notation-box p {
     font-size: 16px;
     color: #333;
 }

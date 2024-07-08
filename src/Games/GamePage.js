@@ -1,25 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import './GamePage.css'
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import Board from './Board';
-import { gamesAtom, isEndAtom, logPosAtom, logsAtom, promotionAtom, turnAtom } from '../Recoil/ChessAtom';
+import { gamesAtom, isEndAtom, isPromotionAtom, notationAtom, turnAtom, notesAtom } from '../Recoil/ChessAtom';
 import chessBoard from './ChessBoard';
 import ChessPiece from "./Piece";
+import Notation from "./Notation";
 
 function GamePage() {
 
-    const [turn, setTurn] = useRecoilState(turnAtom)
-    const setGames = useSetRecoilState(gamesAtom)
-    const [isEnd, setisEnd] = useRecoilState(isEndAtom)
-    const [logPos, setLogPos] = useRecoilState(logPosAtom)
-    const [logs, setLogs] = useRecoilState(logsAtom)
-    const [promotion, setPromotion] = useRecoilState(promotionAtom)
-
-    useEffect(()=>{
-      if(logPos.prevPos){
-        setLogs([...logs, logPos])
-      }
-    },[logPos, setLogs])
+  const setGames = useSetRecoilState(gamesAtom) // 게임초기화
+  const [turn, setTurn] = useRecoilState(turnAtom) // 게임 턴
+  const [isEnd, setisEnd] = useRecoilState(isEndAtom) // 게임 종료 확인
+  const [isPromotion, setIsPromotion] = useRecoilState(isPromotionAtom) // 프로모션 중인지 확인
+  const [notation, setNotation] = useRecoilState(notationAtom)
 
     const resetGame = () => {
       setTurn('white')
@@ -39,7 +33,7 @@ function GamePage() {
     }
 
     const changePiece = (pieceName) => {
-      const {curPos, color} = logPos
+      const {curPos, color} = notation
       setGames(prevs => prevs.map((line, idx1) => {
         return line.map((box, idx2) => {
           if(idx1 === +curPos.split('-')[0] && idx2 === +curPos.split('-')[1]){
@@ -48,11 +42,9 @@ function GamePage() {
           return box
         })
       }))
-      setLogPos({...logPos, piece : pieceName})
-      setPromotion(prev => prev = false)
+      setNotation({...notation, piece : pieceName})
+      setIsPromotion(prev => prev = false)
     }
-
-    console.log(promotion)
 
     return(
       <section className="game-page">
@@ -61,35 +53,29 @@ function GamePage() {
             <Board/>
             <div className='sidebar'>
                 <div className='option-box'>
-                    <p>{turn === 'white' ? '흰색' : '흑색'} 턴!</p>
+                    <h4>{turn === 'white' ? '흰색' : '흑색'} 턴!</h4>
                     <button onClick={resetGame}>새게임</button>
                     <button onClick={requestDraw}>무승부 요청</button>
                     <button onClick={()=>giveupGame('white')}>기권</button>
                 </div>
-                <div className='log-box'>
-                    <p>체스 기보(공부 중)</p>
-                    {logs.length>0 && logs.map((log, idx) => {
-                      const {prevPos, curPos, piece, color} = log
-                      return <p key={idx}>{prevPos} {curPos}, {piece} {color}</p>
-                    })}
-                </div>
+                <Notation/>
             </div>
         </div>
-        {promotion && <div className="promotion-bg">
+        {isPromotion && <div className="promotion-bg">
           <div className="promotion">
             <p>프로모션 선택</p>
             <div className="btn-box">
               <button onClick={()=>changePiece('knight')}>
-                <ChessPiece color={logPos.color} piece="Knight"/>
+                <ChessPiece color={notation.color} piece="Knight"/>
               </button>
               <button onClick={()=>changePiece('Queen')}>
-                <ChessPiece color={logPos.color} piece="Queen"/>
+                <ChessPiece color={notation.color} piece="Queen"/>
               </button>
               <button onClick={()=>changePiece('Rook')}>
-                <ChessPiece color={logPos.color} piece="Rook"/>
+                <ChessPiece color={notation.color} piece="Rook"/>
               </button>
               <button onClick={()=>changePiece('Bishop')}>
-                <ChessPiece color={logPos.color} piece="Bishop"/>
+                <ChessPiece color={notation.color} piece="Bishop"/>
               </button>
             </div>
           </div>

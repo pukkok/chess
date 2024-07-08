@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ChessPiece from "./Piece";
 import Rules from "./Rules";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { gamesAtom, isEndAtom, logPosAtom, promotionAtom, turnAtom } from "../Recoil/ChessAtom";
+import { gamesAtom, isEndAtom, notationAtom, isPromotionAtom, turnAtom } from "../Recoil/ChessAtom";
 import classNames from "classnames";
 
 function Board () {
@@ -12,9 +12,9 @@ function Board () {
     const [checkMates, setCheckMates] = useState([]) // 체크메이트 하는 기물
     const [pinch, setPinch] = useState({}) // 당하는 킹
     const [turn, setTurn] = useRecoilState(turnAtom)
-    const [logPos, setLogPos] = useRecoilState(logPosAtom)
+    const [notation, setNotation] = useRecoilState(notationAtom)
     const [isEnd, setisEnd] = useRecoilState(isEndAtom)
-    const setPromotion = useSetRecoilState(promotionAtom)
+    const setIsPromotion = useSetRecoilState(isPromotionAtom)
 
     const catchPiece = (e, coords, color, piece, turn, isEnd) => {
         let log = {prevPos: '', curPos: '', piece: '', color: ''}
@@ -66,17 +66,17 @@ function Board () {
                         }
 
                         // 백 앙파상
-                        if(+logPos.prevPos.split('-')[0] === 1 && +logPos.curPos.split('-')[0] === 3 &&
-                            idx1 === 3 && noneRow === 3 && idx2 === +logPos.curPos.split('-')[1] &&
-                            logPos.piece === 'Pawn' && logPos.color === 'black'){
+                        if(+notation.prevPos.split('-')[0] === 1 && +notation.curPos.split('-')[0] === 3 &&
+                            idx1 === 3 && noneRow === 3 && idx2 === +notation.curPos.split('-')[1] &&
+                            notation.piece === 'Pawn' && notation.color === 'black'){
                                 box = {piece : 'none', color: 'none'}
                         }
                         // 흑 앙파상
-                        if(+logPos.prevPos.split('-')[0] === 6 && 
-                            +logPos.curPos.split('-')[0] === 4 &&
+                        if(+notation.prevPos.split('-')[0] === 6 && 
+                            +notation.curPos.split('-')[0] === 4 &&
                             idx1 === 4 && noneRow === 4 &&
-                            idx2 === +logPos.curPos.split('-')[1] &&
-                            logPos.piece === 'Pawn' && logPos.color === 'white'){
+                            idx2 === +notation.curPos.split('-')[1] &&
+                            notation.piece === 'Pawn' && notation.color === 'white'){
                                 box = {piece : 'none', color: 'none'}
                         }
 
@@ -84,7 +84,7 @@ function Board () {
                     })
                 })
                 if(log.curPos){
-                    setLogPos({...log})
+                    setNotation({...log})
                 }
                 setGames(changePosition)
                 setCaughtPiece({coords, color: caughtPiece.color, piece : caughtPiece.piece, on: false})
@@ -106,7 +106,7 @@ function Board () {
     }
 
     useEffect(()=>{
-        const result = Rules({...caughtPiece}, games, logPos)
+        const result = Rules({...caughtPiece}, games, notation)
         let mates = []
         if(!caughtPiece.on){
             games.forEach((line, row) => {
@@ -114,7 +114,7 @@ function Board () {
                     if(box.piece !== 'none'){
                         const coords = row + '-' + col
                         const {piece, color} = box
-                        const moves = Rules({piece, color, coords, on:true}, games, logPos)
+                        const moves = Rules({piece, color, coords, on:true}, games, notation)
 
                         if(moves.length>0){
                             
@@ -140,17 +140,17 @@ function Board () {
             }            
         }
         // 프로모션
-        if(+logPos.curPos.split('-')[0] === 0 && logPos.piece === 'Pawn' && logPos.color === 'white'){
+        if(+notation.curPos.split('-')[0] === 0 && notation.piece === 'Pawn' && notation.color === 'white'){
             console.log('화이트 폰 프로모션')
-            setPromotion(true)
+            setIsPromotion(true)
         }
-        if(+logPos.curPos.split('-')[0] === 7 && logPos.piece === 'Pawn' && logPos.color === 'black'){
+        if(+notation.curPos.split('-')[0] === 7 && notation.piece === 'Pawn' && notation.color === 'black'){
             console.log('블랙 폰 프로모션')
-            setPromotion(true)
+            setIsPromotion(true)
         }
         setCheckMates(mates)
         setPossibleMove(result) // 움직일수 있는 위치
-    },[caughtPiece, games, logPos])
+    },[caughtPiece, games, notation])
 
     const alphas = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     return(
@@ -158,7 +158,7 @@ function Board () {
             {games.map((line, row) => {
                 return <div className="line" key={row}>
                     {line.map((box, col) => {
-                        return <div className={classNames("box", {curPos : logPos.curPos === `${row}-${col}`, prevPos : logPos.prevPos === `${row}-${col}`}, {checkmate : checkMates.includes(`${row}-${col}`)}, {'pinch' : pinch.coords === `${row}-${col}`})} key={col} 
+                        return <div className={classNames("box", {curPos : notation.curPos === `${row}-${col}`, prevPos : notation.prevPos === `${row}-${col}`}, {checkmate : checkMates.includes(`${row}-${col}`)}, {'pinch' : pinch.coords === `${row}-${col}`})} key={col} 
                         onClick={(e)=>catchPiece(e, `${row}-${col}`, box.color, box.piece, turn, isEnd)}>
                             {col=== 0 && <span className="numbering">{8-row}</span>}
                             {row === 7 && <span className="alpha">{alphas[col]}</span>} 

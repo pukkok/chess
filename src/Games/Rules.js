@@ -249,7 +249,7 @@ const Rules = ({coords, piece, color, on}, games, logPos) => {
         }
         if(piece ==='Pawn' && color === 'black'){
             if(vertical === 7){
-                console.log('블랙 폰 프로모션')
+                // console.log('블랙 폰 프로모션')
                 possibleCases = ['black promotion']
             }
         }
