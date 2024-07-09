@@ -2,7 +2,7 @@ import React from "react";
 import './GamePage.css'
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import Board from './Board';
-import { gamesAtom, isEndAtom, isPromotionAtom, notationAtom, turnAtom, notesAtom } from '../Recoil/ChessAtom';
+import { gamesAtom, isEndAtom, isPromotionAtom, notationAtom, turnAtom } from '../Recoil/ChessAtom';
 import chessBoard from './ChessBoard';
 import ChessPiece from "./Piece";
 import Notation from "./Notation";
@@ -24,7 +24,6 @@ function GamePage() {
       alert('우리 무승부로 하지 않을래? ㅜㅜ')
     }
     const giveupGame = (user) => {
-      
       if(isEnd){
         return alert('이미 종료된 게임입니다.')
       }

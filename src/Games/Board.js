@@ -7,13 +7,13 @@ import classNames from "classnames";
 
 function Board () {
     const [games, setGames] = useRecoilState(gamesAtom)
-    const [caughtPiece, setCaughtPiece] = useState({coords :'', piece:'', color: 'black', on:false})
+    const [caughtPiece, setCaughtPiece] = useState({coords :'0-0', piece:'', color: 'black', on:false})
     const [possibleMoves, setPossibleMoves] = useState([]) // 움직일수 있는 곳
     const [checks, setChecks] = useRecoilState(checksAtom) // 체크하는 기물
     const [pinch, setPinch] = useState({}) // 당하는 킹
     const [turn, setTurn] = useRecoilState(turnAtom)
     const [notation, setNotation] = useRecoilState(notationAtom)
-    const [isEnd, setisEnd] = useRecoilState(isEndAtom)
+    const [isEnd, setIsEnd] = useRecoilState(isEndAtom)
     const setIsPromotion = useSetRecoilState(isPromotionAtom)
 
     const handelPieceClick = (e, coords, color, piece, turn, isEnd) => {
@@ -22,23 +22,21 @@ function Board () {
         if(isEnd || (!caughtPiece.on && piece === 'none')) return
         // 상대턴일 때
         if(possibleMoves.length===0 && turn !== color) return alert('상대 턴입니다.')
-        // 처음 클릭
-        if(!caughtPiece.coords) return setCaughtPiece({coords, color, piece, on: true})
-            
+        // 움직일 때
         if(possibleMoves.length>0){
             if(possibleMoves.includes(coords)){
-                movePiece(coords)
-                return
+                return movePiece(coords)
             }else{
                 if(caughtPiece.color !== color){
                     return alert('움직일수 없는 곳 입니다.')
                 }
             }
         }
-        
+
+        // 기물 잡기
         if(caughtPiece.coords !== coords){ // 다른것 클릭했을때 다른것 액티브
             setCaughtPiece({coords, color, piece, on: true})
-        }else{ // 같은 것 클릭했을때 내려놓기
+        }else{ // 같은 것 클릭했을때 토글
             setCaughtPiece({coords, color, piece, on: !caughtPiece.on})
         }        
     }
@@ -49,22 +47,22 @@ function Board () {
         const {piece, color, coords : caughtCoords} = caughtPiece
         const [noneRow, noneCol] = caughtCoords.split('-').map(Number)
 
-        const changePosition = games.map((line, idx1)=>{
-            return line.map((box, idx2)=>{
+        const changedGames = games.map((line, rowIndex)=>{
+            return line.map((box, colIndex)=>{
 
-                if(idx1 === moveRow && idx2 === moveCol){
-                    log = {...log, prev: games[idx1][idx2], curPos : `${moveRow}-${moveCol}`, piece, color}
+                if(rowIndex === moveRow && colIndex === moveCol){
+                    log = {...log, prev: games[rowIndex][colIndex], curPos : `${moveRow}-${moveCol}`, piece, color}
                     // 바뀌는 곳
                     box = {piece, color}
                     
                     const checkMate = games[moveRow][moveCol]
                     if(checkMate.piece === 'King'){
                         alert(turn + '의 승리')
-                        setisEnd(true)
+                        setIsEnd(true)
                     }
                 }
                 
-                if(idx1 === noneRow && idx2 === noneCol){
+                if(rowIndex === noneRow && colIndex === noneCol){
                     // 이전에 있던 곳 비우기
                     box = {piece : 'none', color: 'none'}
                     log = {...log, prevPos : `${noneRow}-${noneCol}`}
@@ -72,27 +70,30 @@ function Board () {
 
                 // 백 앙파상
                 if(+notation.prevPos.split('-')[0] === 1 && +notation.curPos.split('-')[0] === 3 &&
-                    idx1 === 3 && noneRow === 3 && idx2 === +notation.curPos.split('-')[1] &&
+                    rowIndex === 3 && noneRow === 3 && colIndex === +notation.curPos.split('-')[1] &&
                     notation.piece === 'Pawn' && notation.color === 'black'){
                         box = {piece : 'none', color: 'none'}
                 }
                 // 흑 앙파상
                 if(+notation.prevPos.split('-')[0] === 6 && 
                     +notation.curPos.split('-')[0] === 4 &&
-                    idx1 === 4 && noneRow === 4 &&
-                    idx2 === +notation.curPos.split('-')[1] &&
+                    rowIndex === 4 && noneRow === 4 &&
+                    colIndex === +notation.curPos.split('-')[1] &&
                     notation.piece === 'Pawn' && notation.color === 'white'){
                         box = {piece : 'none', color: 'none'}
                 }
 
+                // 캐슬링
+
                 return box
             })
         })
+
         if(log.curPos){
             setNotation({...log})
         }
         setChecks(checkForCheckmates())
-        setGames(changePosition)
+        setGames(changedGames)
         setCaughtPiece({coords, color: caughtPiece.color, piece : caughtPiece.piece, on: false})
         const changeTurn = caughtPiece.color === 'black' ? 'white' : 'black'
         setTurn(changeTurn)
@@ -116,8 +117,13 @@ function Board () {
     useEffect(()=>{
 
         const updateMoves = () => {
-            const result = Rules({ ...caughtPiece }, games, notation)
-            setPossibleMoves(result)
+            const moves = Rules({ ...caughtPiece }, games, notation)
+            moves.forEach(move => {
+                const [ver, hor] = move.split('-').map(Number)
+            });
+            const dangerMoves = 
+            console.log(moves)
+            setPossibleMoves(moves)
             handlePromotion()
         };
 

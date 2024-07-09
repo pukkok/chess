@@ -2,7 +2,7 @@ const Rules = ({coords, piece, color, on}, games, notation) => {
     const vertical = +coords.split('-')[0]
     const horizon = +coords.split('-')[1]
     let possibleCases = []
-    const {prevPos, curPos, piece : logPiece, color: logColor} = notation
+    const {prevPos, curPos, piece : curPiece, color: curColor} = notation
 
     if(on){
         // 폰 조건
@@ -26,7 +26,7 @@ const Rules = ({coords, piece, color, on}, games, notation) => {
                 possibleCases.push((vertical-2) + '-' + horizon);
             }
             // 백 앙파상
-            if(+prevPos.split('-')[0] === 1 && +curPos.split('-')[0] === 3 && vertical === 3 && logPiece === 'Pawn' && logColor === 'black') {
+            if(+prevPos.split('-')[0] === 1 && +curPos.split('-')[0] === 3 && vertical === 3 && curPiece === 'Pawn' && curColor === 'black') {
                 possibleCases.push((vertical-1) + '-' + curPos.split('-')[1]);
             }
 
@@ -53,7 +53,7 @@ const Rules = ({coords, piece, color, on}, games, notation) => {
                 possibleCases.push((vertical+2) + '-' + horizon);
             }
             // 흑 앙파상
-            if(+prevPos.split('-')[0] === 6 && +curPos.split('-')[0] === 4 && vertical === 4 && logPiece === 'Pawn' && logColor === 'white') {
+            if(+prevPos.split('-')[0] === 6 && +curPos.split('-')[0] === 4 && vertical === 4 && curPiece === 'Pawn' && curColor === 'white') {
                 possibleCases.push((vertical+1) + '-' + curPos.split('-')[1]);
             }
 

@@ -51,7 +51,7 @@ function Notation () {
             setNotes(prev => [...prev, text])
         }
         
-    },[notation, setNotes])
+    },[notation, setNotes, checks.length])
 
     return (
         <div className='notation-box'>
